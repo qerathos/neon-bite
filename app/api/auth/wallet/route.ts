@@ -45,8 +45,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    let isNewUser = false
+
     if (!existingProfile) {
-      // Create new profile with wallet address
+      isNewUser = true
+      // Create new profile with temporary username
       const { data: newProfile, error: insertError } = await supabase
         .from('profiles')
         .insert({
@@ -57,6 +60,7 @@ export async function POST(request: NextRequest) {
           prestige_level: 0,
           total_clicks: 0,
           lifetime_bites: 0,
+          username_set: false,
         })
         .select()
         .single()
@@ -72,6 +76,7 @@ export async function POST(request: NextRequest) {
       profile = newProfile
     } else {
       profile = existingProfile
+      isNewUser = !profile.username_set
     }
 
     // Fetch BlockDAG balance
@@ -93,6 +98,7 @@ export async function POST(request: NextRequest) {
       token,
       address: address.toLowerCase(),
       blockdagBalance,
+      isNewUser,
     })
   } catch (error: any) {
     console.error('[v0] Wallet auth error:', error)

@@ -71,8 +71,12 @@ export default function WalletLoginPage() {
         localStorage.setItem('blockdag_balance', data.blockdagBalance)
       }
 
-      // Redirect to game
-      router.push('/game')
+      // If new user, redirect to username setup, otherwise redirect to game
+      if (data.isNewUser) {
+        router.push(`/auth/wallet-register?address=${data.address}`)
+      } else {
+        router.push('/game')
+      }
     } catch (err: any) {
       setAuthError(err.message || 'Authentication failed')
       setIsAuthenticating(false)
