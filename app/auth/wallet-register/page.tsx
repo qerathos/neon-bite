@@ -4,7 +4,7 @@ import { useState, useEffect, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Loader2, Zap, CheckCircle2 } from 'lucide-react'
+import { Loader2, Zap, CheckCircle2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 
 function WalletRegisterContent() {
@@ -89,10 +89,14 @@ function WalletRegisterContent() {
 
       setSuccess(true)
 
-      // Redirect to game after short delay
+      // Redirect to game immediately after username is set
       setTimeout(() => {
+        // Clear wallet tokens as we're now using Supabase session
+        localStorage.removeItem('wallet_token')
+        localStorage.removeItem('wallet_address')
+        localStorage.removeItem('blockdag_balance')
         router.push('/game')
-      }, 1500)
+      }, 1000)
     } catch (err: any) {
       setError(err.message || 'Failed to set username')
       setIsLoading(false)
@@ -102,6 +106,12 @@ function WalletRegisterContent() {
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <div className="w-full max-w-md">
+        {/* Back Button */}
+        <Link href="/auth/wallet-login" className="inline-flex items-center text-muted-foreground hover:text-primary mb-4 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" />
+          <span className="font-mono text-sm">Back</span>
+        </Link>
+        
         {/* Header */}
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
