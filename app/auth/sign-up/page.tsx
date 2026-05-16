@@ -62,10 +62,12 @@ export default function SignUpPage() {
         animate={{ opacity: 1, y: 0 }}
       >
         {/* Back button */}
-        <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-primary mb-8 transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" />
-          <span className="font-mono text-sm">Back to landing</span>
-        </Link>
+        <div className="flex items-center justify-between mb-8">
+          <Link href="/" className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            <span className="font-mono text-sm">Back</span>
+          </Link>
+        </div>
 
         {/* Logo */}
         <div className="text-center mb-8">
