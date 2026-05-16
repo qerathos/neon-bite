@@ -111,7 +111,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       let totalBps = 0
       upgradesData?.forEach((upgrade: Upgrade) => {
         const owned = playerUpgradesMap.get(upgrade.id) || 0
-        totalBps += upgrade.production * owned
+        totalBps += (upgrade.base_income || 0) * owned
       })
 
       set({
@@ -210,7 +210,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
     // Deduct cost and add upgrade
     const newOwned = owned + 1
-    const newBps = profile.bites_per_second + upgrade.production
+    const newBps = profile.bites_per_second + (upgrade.base_income || 0)
     
     set((state) => {
       const newMap = new Map(state.playerUpgrades)
@@ -417,9 +417,13 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   signOut: async () => {
-    const supabase = createClient()
     await get().syncToDatabase()
-    await supabase.auth.signOut()
+    
+    // Clear wallet authentication
+    localStorage.removeItem('wallet_token')
+    localStorage.removeItem('wallet_address')
+    localStorage.removeItem('blockdag_balance')
+    
     set({
       profile: null,
       upgrades: [],
